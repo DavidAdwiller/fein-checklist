@@ -86,9 +86,12 @@ nav button .cnt{display:block;font-size:11px;opacity:.7;font-weight:400}
 .help summary{cursor:pointer;padding:10px 0}
 /* owner */
 #loginCard{max-width:420px}
-#feedControls{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;background:#fafaf8;border:1px solid #dedfda;border-radius:20px;padding:18px}
-#feedControls label{font-size:14px;flex:1 1 180px}
-#feedControls .chk{display:flex;align-items:center;gap:8px;flex:1 1 100%}
+#feedControls{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:end;background:#fafaf8;border:1px solid #dedfda;border-radius:20px;padding:18px}
+#feedControls label{font-size:14px;min-width:0}
+#feedControls label:first-child,#feedControls .chk{grid-column:1/-1}
+#feedControls .chk{display:flex;align-items:center;gap:8px}
+input[type=date]{-webkit-appearance:none;appearance:none;display:block;min-width:0;max-width:100%;text-align:left}
+input[type=date]::-webkit-date-and-time-value{text-align:left}
 #feedControls .chk input{width:20px;height:20px;min-height:20px;margin:0}
 #refresh{flex:0 0 auto}
 .busy{font-size:12px;color:#646962;margin:10px 0 18px}
