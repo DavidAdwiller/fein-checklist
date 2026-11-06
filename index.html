@@ -375,12 +375,14 @@ function renderCard(key) {
     html += `<label style="margin-top:16px">${esc(t.photoLabel)}</label>
       <div class="photo-grid">${s.photos.map((p, i) => `<div class="thumb"><img src="${p.url}" alt=""><button type="button" data-del="${i}" aria-label="Հեռացնել">×</button></div>`).join("")}</div>
       <div class="photo-add"${full ? " hidden" : ""}>
-        <button type="button" data-pick="cam">📷 Նկարել</button>
-        <button type="button" data-pick="gal">🖼 Ընտրել</button>
+        <button type="button" data-pick="cam">📷 ${s.photos.length && t.camera ? "Նկարել ևս մեկը" : "Նկարել"}</button>
         <input type="file" accept="image/*" capture="environment" data-file="cam">
-        <input type="file" accept="image/*" multiple data-file="gal">
+        ${t.camera ? "" : `<button type="button" data-pick="gal">🖼 Ընտրել</button>
+        <input type="file" accept="image/*" multiple data-file="gal">`}
       </div>
-      <p class="stamp">${s.photos.length} / ${C.maxPhotos} · ${esc(t.photoHint || "")}</p>`;
+      <p class="stamp">${s.photos.length} / ${C.maxPhotos} · ${t.camera
+        ? "Նկարիր գործն ավարտելու պահին։ Եվս մեկ լուսանկարի համար կրկին սեղմիր «Նկարել»։"
+        : esc(t.photoHint || "")}</p>`;
   }
   html += `<label style="margin-top:14px">Նշում / խնդրի դեպքում՝ պարտադիր նկարագրություն<textarea data-k="note" maxlength="2000" placeholder="Ինչ է արվել կամ ինչն է խանգարում">${esc(s.note)}</textarea></label>
     <div class="form-actions"><button type="button" class="primary send"${s.busy ? " disabled" : ""}>${s.busy ? esc(s.busyText || "Ուղարկվում է…") : (s.msgType === "is-error" && s.failed ? "Կրկին փորձել" : "Ուղարկել հիմա")}</button></div>
