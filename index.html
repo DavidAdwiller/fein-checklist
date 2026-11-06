@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f3ef">
+<title>FEIN · Թիմի ընթացիկ աշխատանքները</title>
+<link rel="icon" href="https://tayjzwrguvdokxrzxwak.supabase.co/storage/v1/object/public/assets/fein-logo.png">
+<style>
+:root{--ink:#252729;--chalk:#f4f3ef;--problem-ink:#922720;--problem-bg:#fff1f0;--problem-border:#cf8c86}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--chalk);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans Armenian",sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+header{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:25px max(24px,calc(50vw - 390px));border-bottom:1px solid #e3e3df}
+.brand img{display:block;width:132px;height:auto;max-width:100%}
+header .small{font-size:9px;letter-spacing:1.8px;color:#5b5e5c;line-height:1.7;text-align:right}
+main{max-width:820px;margin:20px auto;padding:0 20px 20px}
+.small{font-size:10px;letter-spacing:1.5px;color:#666966}
+h1{font-size:34px;font-weight:500;letter-spacing:-.8px;line-height:1.2;margin:10px 0 9px}
+h2{font-size:20px;font-weight:650;letter-spacing:-.3px;margin:25px 0 12px}
+#pageIntro{font-size:14px;color:#676b67;margin:0 0 20px}
+.muted{color:#646962;line-height:1.6}
+.toplink{font-size:12px;text-align:right;margin:0}
+.toplink button{min-height:0;padding:0;border:0;background:none;text-decoration:underline;font-size:12px;color:#646962;font-weight:400}
+.meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:20px 0}
+label{display:block;font-size:14px;font-weight:400;color:#4c514b;line-height:1.5}
+input,textarea,select{width:100%;min-height:48px;margin-top:7px;padding:12px 14px;border:1px solid #b9bcb8;border-radius:16px;background:#fdfdfb;color:var(--ink);font:inherit;font-size:16px;line-height:1.4}
+.meta input{background:#fafaf8}
+input[readonly]{background:#eeefeb;color:#565c55;border-color:#d5d8d1}
+select{border-radius:18px;background:#eeefeb;padding-right:32px}
+textarea{min-height:94px;resize:vertical}
+input[aria-invalid=true]{border-color:#b3372e;background:var(--problem-bg)}
+button{cursor:pointer;font:inherit;min-height:48px;border:1px solid #dedfdb;border-radius:20px;padding:13px 18px;background:#f9f9f7;color:var(--ink);font-weight:500;line-height:1.35;transition:background .16s,transform .16s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button.active,.primary{background:var(--ink);border-color:var(--ink);color:#fff;box-shadow:0 2px 6px rgba(37,39,41,.043)}
+button:disabled{opacity:.5;cursor:wait}
+button:active:not(:disabled){transform:translateY(1px)}
+@media (hover:hover){button:hover:not(:disabled){background:#e7e8e2}button.active:hover:not(:disabled),.primary:hover:not(:disabled){background:#3b3f3c}}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #565f58;outline-offset:3px}
+nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;padding:4px;margin:24px 0;border:1px solid #e1e2dd;background:#ececE8;border-radius:22px}
+nav.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+nav button{border-radius:18px;padding:12px 10px;background:transparent;border-color:transparent;font-size:14px;white-space:normal;min-width:0}
+nav button .cnt{display:block;font-size:11px;opacity:.7;font-weight:400}
+.notice{border:1px solid #dedfda;border-radius:18px;background:#eaece6;color:#4e574e;padding:16px 18px;margin:16px 0;font-size:13px;line-height:1.6}
+.notice:empty{display:none}
+#staffAccess{background:#eeefea}
+#staffAccess label{font-size:14px}
+#staffPrivacy{font-size:12px;margin:8px 0 0}
+#draftControls{background:transparent;border-color:#dddeda;padding:14px 16px}
+#draftControls label{display:flex;align-items:center;gap:9px;font-size:13px}
+#keepDrafts{flex:0 0 20px;width:20px;height:20px;min-height:20px;margin:0;accent-color:var(--ink)}
+#clearDrafts{font-size:13px;min-height:44px;padding:10px 14px;background:#eeeeea}
+.stamp{font-size:12px;line-height:1.6;color:#646962;margin:12px 0 0}
+.card{border:1px solid #dedfda;border-radius:22px;background:linear-gradient(145deg,#fff,#fafaf8);box-shadow:0 4px 12px rgba(37,39,41,.027);margin:16px 0;padding:24px}
+.card>.stamp:first-child{margin-top:0}
+.card.sent{border-left:3px solid #8a9e8c}
+.card[data-status=issue]{background:#fff7f6;border-left:4px solid #b3372e}
+.card .top{display:grid;gap:2px}
+.card .time{font-size:14px;color:#5a5e59;font-variant-numeric:tabular-nums}
+.card .task{font-size:20px;line-height:1.4;font-weight:550;letter-spacing:-.3px}
+.card.collapsed .body{display:none}
+.sent-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.sent-line button{min-height:40px;padding:8px 14px;font-size:13px}
+.quantity-list h3{font-size:15px;color:#60665f;font-weight:600;margin:24px 0 4px}
+.quantity-row{display:grid;grid-template-columns:minmax(0,1fr) 94px;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid #e6e7e2}
+.quantity-row label{font-size:16px;color:#343934;overflow-wrap:anywhere}
+.quantity-row input{margin:0;min-width:0;text-align:center;padding:10px;border-radius:18px;background:#f8f8f5;font-variant-numeric:tabular-nums;scroll-margin-block:120px}
+.q-sticky{position:sticky;bottom:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:12px -8px 0;padding:10px 8px calc(10px + env(safe-area-inset-bottom));background:rgba(250,250,248,.96);border-top:1px solid #e6e7e2;backdrop-filter:blur(6px)}
+.q-sticky .stamp{margin:0;font-weight:600;color:#343934;font-size:13px}
+.q-sticky button{min-height:40px;padding:8px 14px;font-size:13px}
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px;margin-top:10px}
+.photo-grid:empty{display:none}
+.thumb{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:#eeefeb}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb button{position:absolute;top:4px;right:4px;width:30px;height:30px;min-height:30px;padding:0;border:0;border-radius:50%;background:rgba(37,39,41,.78);color:#fff;font-size:16px;line-height:30px}
+.photo-add{display:flex;gap:8px;margin-top:10px}
+.photo-add button{flex:1;font-size:14px;padding:11px 10px}
+.photo-add input{display:none}
+.form-actions{margin-top:18px}
+.form-actions .send{width:100%;min-height:54px;font-size:16px}
+.result{font-size:14px;line-height:1.6;overflow-wrap:anywhere;margin:12px 0 0}
+.result:empty{display:none}
+.result.is-error,#loginMsg:not(:empty),.err:not(:empty){color:var(--problem-ink);background:var(--problem-bg);border:1px solid var(--problem-border);border-radius:14px;padding:12px 14px}
+.result.is-ok{background:#e5eee3;border:1px solid #bacab5;color:#365236;border-radius:14px;padding:12px 14px}
+.help{margin:28px 0 38px;font-size:13px;color:#666;line-height:1.6;padding:0 4px}
+.help summary{cursor:pointer;padding:10px 0}
+/* owner */
+#loginCard{max-width:420px}
+#feedControls{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;background:#fafaf8;border:1px solid #dedfda;border-radius:20px;padding:18px}
+#feedControls label{font-size:14px;flex:1 1 180px}
+#feedControls .chk{display:flex;align-items:center;gap:8px;flex:1 1 100%}
+#feedControls .chk input{width:20px;height:20px;min-height:20px;margin:0}
+#refresh{flex:0 0 auto}
+.busy{font-size:12px;color:#646962;margin:10px 0 18px}
+.summary-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:22px 0}
+.summary-tile{border:1px solid #dedfda;border-top-width:5px;border-radius:16px;padding:16px 12px}
+.summary-tile .tile-icon{font-size:20px;line-height:1;display:block;margin-bottom:8px}
+.summary-tile span{font-size:12px;font-weight:600;line-height:1.4;display:block;min-height:34px}
+.summary-tile strong{display:block;font-size:30px;margin-top:6px;font-variant-numeric:tabular-nums}
+.status-done.summary-tile{background:#eaf1e8;color:#265438;border-color:#becdbc;border-top-color:#397348}
+.status-missing.summary-tile{background:#eeefed;color:#4d5650;border-color:#c5cbc6;border-top-color:#717b73}
+.status-issue.summary-tile{background:var(--problem-bg);color:var(--problem-ink);border-color:var(--problem-border);border-top-color:#b3372e}
+.missing-list{list-style:none;padding:0;margin:0;border:1px solid #dedfda;border-radius:18px;overflow:hidden}
+.missing-list li{display:grid;grid-template-columns:60px minmax(0,1fr);gap:12px;padding:16px;border-bottom:1px solid #e3e2dd;border-left:6px solid #717b73;background:#f0f1ed;line-height:1.45}
+.missing-list li:last-child{border-bottom:0}
+.missing-list strong{font-variant-numeric:tabular-nums}
+.missing-copy{display:flex;flex-direction:column;align-items:flex-start;gap:7px}
+.status-badge{display:inline-flex;align-items:center;gap:7px;border-radius:16px;padding:8px 11px;font-size:14px;font-weight:550;line-height:1.4;max-width:100%}
+.status-badge.status-done{background:#dce7dd;color:#265438}
+.status-badge.status-issue{background:#f9d9d6;color:var(--problem-ink)}
+.status-badge.status-missing{background:#e3e6e1;color:#4d5650}
+.missing-list .status-badge{font-size:12px;padding:4px 7px}
+.status-icon{font-size:17px;line-height:1;font-weight:800}
+.feed-row{background:#fafaf8;border:1px solid #dedfda;border-radius:20px;padding:18px;margin-bottom:12px;box-shadow:0 3px 10px rgba(37,39,41,.02)}
+.feed-row.status-done{background:#f5f8f2;border-left:6px solid #397348}
+.feed-row.status-issue{background:var(--problem-bg);border-left:6px solid #b3372e}
+.feed-row.is-history{background:#f5f5f3;border-left:6px solid #a6abb0}
+.feed-row.is-history .status-badge{background:#e6e7e7;color:#41474d}
+.feed-row .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.feed-row .top>strong{flex:1 1 180px}
+.feed-status{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0 4px}
+.history-label{color:#555d64;font-size:13px;font-weight:600}
+.chip{padding:5px 8px;font-size:11px;background:#e3e5dc;border-radius:8px}
+.feed-row p.note{white-space:pre-wrap;margin:10px 0 0}
+.feed-row details{margin-top:10px;font-size:14px}
+.feed-row summary{cursor:pointer;padding:6px 0;font-weight:550}
+.qgrid{display:grid;grid-template-columns:1fr auto;gap:2px 16px;margin-top:6px}
+.qgrid span:nth-child(even){font-variant-numeric:tabular-nums;font-weight:600;text-align:right}
+.qgrid .zero{opacity:.5}
+.feed-photos{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.feed-photos img{width:120px;height:120px;object-fit:cover;border-radius:12px;cursor:zoom-in;background:#eee}
+.empty-state{background:#fafaf8;padding:20px;border:1px solid #dedfda;border-radius:20px;color:#666}
+dialog#photoDialog{max-width:100vw;max-height:100vh;width:100vw;height:100dvh;margin:0;border:0;padding:0;background:rgba(20,21,22,.94);color:#fff}
+dialog#photoDialog::backdrop{background:rgba(20,21,22,.9)}
+.pv{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;touch-action:pan-y}
+.pv img{max-width:96vw;max-height:84dvh;object-fit:contain;border-radius:8px;user-select:none}
+.pv .bar{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:12px 14px calc(12px);padding-top:calc(12px + env(safe-area-inset-top))}
+.pv .bar button{min-height:40px;padding:8px 16px;background:rgba(255,255,255,.14);border:0;color:#fff}
+.pv .nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;padding:0;border-radius:50%;background:rgba(255,255,255,.14);border:0;color:#fff;font-size:22px}
+.pv .prev{left:10px}.pv .next{right:10px}
+@media (max-width:600px){
+ header{padding:20px;gap:16px}
+ .brand img{width:112px}
+ header .small{font-size:8px;letter-spacing:1px}
+ main{margin:18px auto;padding:0 16px 12px}
+ h1{font-size:30px}
+ .meta{grid-template-columns:1fr 1fr;gap:12px}
+ .meta>label:first-child{grid-column:1/-1}
+ .meta input{padding:11px;font-size:15px}
+ .card{padding:18px;border-radius:20px}
+ .card .task{font-size:19px}
+ nav{margin:20px 0}
+ nav button{font-size:13px;padding:11px 6px}
+ .quantity-row{grid-template-columns:minmax(0,1fr) 84px;gap:10px}
+ .quantity-row label{font-size:15px}
+ .summary-grid{gap:7px}
+ .summary-tile{padding:13px 9px;border-radius:16px}
+ .summary-tile span{font-size:11px;min-height:45px}
+ .summary-tile strong{font-size:28px}
+ .feed-row{padding:16px;border-radius:18px}
+ .feed-photos img{width:96px;height:96px}
+ .pv .nav{display:none}
+}
+@media (prefers-reduced-motion:reduce){button{transition:none}button:active:not(:disabled){transform:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><img src="https://tayjzwrguvdokxrzxwak.supabase.co/storage/v1/object/public/assets/fein-logo.png" alt="FEIN" width="682" height="218"></div>
+  <div class="small">TEAM UPDATES<br>ԱՄԵՆ ԳՈՐԾ՝ ԻՐ ՊԱՀԻՆ</div>
+</header>
+<main>
+  <p class="toplink"><button type="button" id="ownerLink">Սեփականատիրոջ մուտք</button></p>
+
+  <section class="card" id="loginCard" hidden>
+    <div class="top"><span class="task">Սեփականատիրոջ մուտք</span></div>
+    <label style="margin-top:14px">Գաղտնաբառ<input id="ownerPw" type="password" autocomplete="current-password"></label>
+    <div class="form-actions"><button class="primary send" id="loginBtn" type="button">Մուտք</button></div>
+    <p id="loginMsg" class="result"></p>
+    <p class="stamp">Գաղտնաբառը կպահվի այս սարքում, մինչև «Դուրս գալ»։</p>
+  </section>
+
+  <nav class="two" id="mainNav" hidden>
+    <button data-view="work" class="active" type="button">Ուղարկել թարմացում</button>
+    <button data-view="feed" type="button">Օրվա ամփոփում</button>
+  </nav>
+
+  <div id="app">
+    <div class="small">ԱՇԽԱՏԱՆՔԻ ԸՆԹԱՑՔԸ · ՄԵԿ ԷՋՈՒՄ</div>
+    <h1>Այսօրվա գործերը</h1>
+    <p class="muted" id="pageIntro">Ընտրիր գործը, լրացրու և ուղարկիր։</p>
+
+    <div class="meta">
+      <label>Անուն Ազգանուն<input id="name" maxlength="100" autocomplete="name" placeholder="Անուն Ազգանուն"></label>
+      <label>Մասնաճյուղ<select id="branch"><option value="">Ընտրիր մասնաճյուղը</option></select></label>
+      <label>Աշխատանքային օր<input id="day" readonly></label>
+    </div>
+
+    <div id="staffAccess" class="notice">
+      <label>Աշխատակազմի ընդհանուր կոդը<input id="staffCode" type="password" inputmode="numeric" maxlength="128" autocomplete="off" placeholder="Մուտքի կոդ"></label>
+      <p id="staffPrivacy">Կոդը միայն թարմացում ուղարկելու համար է և չի պահվում։ Անունն ու մասնաճյուղը հիշվում են այս սարքում։</p>
+    </div>
+
+    <div class="notice" id="draftControls">
+      <label><input id="keepDrafts" type="checkbox"> Պահել չուղարկվածը այս սարքում</label>
+      <p class="stamp">Միացրու միայն անձնական սարքում․ նշումներն ու քանակները կպահվեն վերջին խմբագրումից մինչև 24 ժամ։ Կոդը և լուսանկարները չեն պահվում։</p>
+      <button id="clearDrafts" type="button">Մաքրել այս սարքի սևագրերը</button>
+    </div>
+
+    <nav id="tabs"></nav>
+    <div id="tasks"></div>
+
+    <details class="help">
+      <summary>Ինչպես է հաշվվում աշխատանքային օրը</summary>
+      <p>Փակման 00:30 գործերը վերաբերում են նախորդ աշխատանքային օրվան։ Աշխատանքային օրը փոխվում է 04:00-ին՝ Երևանի ժամանակով։</p>
+      <p>Գրանցվում է ուղարկման ժամը։ Ուշ ուղարկելը չի ապացուցում, որ գործն ուշ է արվել։ Լուսանկարի նկարահանման պահը չի ստուգվում։ Նշումները չեն փոխարինում տեղում ստուգմանը։</p>
+      <p>Տվյալներն ու լուսանկարները պահվում են 31 օր, որից հետո ջնջվում են ավտոմատ։</p>
+    </details>
+  </div>
+
+  <div id="feed" hidden>
+    <div id="feedControls">
+      <label>Մասնաճյուղ<select id="filterBranch"><option value="all">Բոլոր մասնաճյուղերը</option></select></label>
+      <label>Աշխատանքային օր<input id="filterDay" type="date"></label>
+      <button id="refresh" type="button">Թարմացնել</button>
+      <label class="chk"><input type="checkbox" id="onlyIssues"> Միայն խնդիրները</label>
+    </div>
+    <p class="busy" id="sync"></p>
+    <div id="summary"></div>
+    <div id="missing"></div>
+    <h2>Վերջին թարմացումները</h2>
+    <div id="feedItems"></div>
+    <p class="toplink" style="margin-top:24px"><button type="button" id="logout">Դուրս գալ</button></p>
+  </div>
+  <p id="fatal" class="err" role="alert"></p>
+</main>
+
+<dialog id="photoDialog">
+  <div class="pv" id="pv">
+    <div class="bar"><span id="pvCount"></span><button type="button" id="pvClose">Փակել</button></div>
+    <button type="button" class="nav prev" id="pvPrev" aria-label="Նախորդ">‹</button>
+    <img id="pvImg" alt="">
+    <button type="button" class="nav next" id="pvNext" aria-label="Հաջորդ">›</button>
+  </div>
+</dialog>
+
+<script>
+(() => {
+const API = "https://tayjzwrguvdokxrzxwak.supabase.co/functions/v1/api";
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const LS = {
+  get(k, d = null) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+  del(k) { try { localStorage.removeItem(k); } catch {} },
+};
+const fmtDay = (d) => d ? d.split("-").reverse().join(".") : "";
+const hhmm = (iso) => new Date(iso).toLocaleTimeString("hy-AM", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Asia/Yerevan" });
+const yerevanHour = () => Number(new Date().toLocaleString("en-GB", { hour: "2-digit", hour12: false, timeZone: "Asia/Yerevan" }));
+const qKey = (g, i) => `${g}/${i}`;
+
+async function post(body) {
+  const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw Object.assign(new Error(d.error || "Սերվերի սխալ"), { status: r.status });
+  return d;
+}
+
+let C = LS.get("fein_config");        // config
+let DAY = "";                          // work day YYYY-MM-DD
+let TAB = 0;
+let SENT = {};                         // task_key -> {status, created_at}
+const S = {};                          // task_key -> state
+const OPENED = new Set();              // sent tasks reopened for re-send
+
+const st = (key) => (S[key] ??= { status: "done", note: "", q: {}, photos: [], busy: false, msg: "", msgType: "" });
+const branch = () => $("#branch").value;
+const taskTitle = (t, b) => (t.titleByBranch && t.titleByBranch[b]) || t.title;
+const branchTitle = (b) => C.branches.find((x) => x.key === b)?.title || b;
+const qItems = (t) => (t.groups || []).flatMap((g) => g.items.map((i) => qKey(g.title, i)));
+
+/* ---------- drafts ---------- */
+const draftKey = () => `fein_draft_${branch()}_${DAY}`;
+function saveDraft() {
+  if (!$("#keepDrafts").checked || !branch()) return;
+  const d = {};
+  for (const [k, v] of Object.entries(S)) if (v.note || Object.keys(v.q).length || v.status !== "done") d[k] = { status: v.status, note: v.note, q: v.q };
+  LS.set(draftKey(), { t: Date.now(), d });
+}
+function loadDraft() {
+  const x = LS.get(draftKey());
+  if (!x || Date.now() - x.t > 24 * 3600e3) { LS.del(draftKey()); return; }
+  for (const [k, v] of Object.entries(x.d)) Object.assign(st(k), v);
+}
+function clearDrafts() {
+  Object.keys(localStorage).filter((k) => k.startsWith("fein_draft_")).forEach((k) => LS.del(k));
+}
+
+/* ---------- photos ---------- */
+async function compress(file) {
+  const MAX = 1600;
+  let bmp;
+  try { bmp = await createImageBitmap(file, { imageOrientation: "from-image" }); }
+  catch {
+    bmp = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = URL.createObjectURL(file); });
+  }
+  const w = bmp.width, h = bmp.height, k = Math.min(1, MAX / Math.max(w, h));
+  const c = document.createElement("canvas");
+  c.width = Math.round(w * k); c.height = Math.round(h * k);
+  c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+  const blob = await new Promise((r) => c.toBlob(r, "image/jpeg", 0.8));
+  if (!blob) throw new Error("compress");
+  return blob;
+}
+async function addPhotos(key, files) {
+  const s = st(key);
+  const room = C.maxPhotos - s.photos.length;
+  const list = [...files].slice(0, Math.max(0, room));
+  if (files.length > room) { s.msg = `Առավելագույնը ${C.maxPhotos} լուսանկար։`; s.msgType = "is-error"; }
+  for (const f of list) {
+    try { const blob = await compress(f); s.photos.push({ blob, url: URL.createObjectURL(blob) }); }
+    catch { s.msg = "Լուսանկարը չհաջողվեց բացել։ Ընտրիր JPG կամ PNG։"; s.msgType = "is-error"; }
+  }
+  renderCard(key);
+}
+
+/* ---------- render staff ---------- */
+function renderTabs() {
+  const b = branch();
+  $("#tabs").innerHTML = C.slots.map((name, i) => {
+    const ts = C.tasks.filter((t) => t.slot === i);
+    const done = ts.filter((t) => SENT[t.key]).length;
+    return `<button type="button" data-tab="${i}" class="${i === TAB ? "active" : ""}">${esc(name)}${b ? `<span class="cnt">${done} / ${ts.length}</span>` : ""}</button>`;
+  }).join("");
+}
+function renderTasks() {
+  renderTabs();
+  const b = branch();
+  if (!b) { $("#tasks").innerHTML = `<p class="muted">Սկսելու համար ընտրիր մասնաճյուղը։</p>`; return; }
+  $("#tasks").innerHTML = C.tasks.filter((t) => t.slot === TAB).map((t) => `<section class="card" data-task="${t.key}"></section>`).join("");
+  C.tasks.filter((t) => t.slot === TAB).forEach((t) => renderCard(t.key));
+}
+function renderCard(key) {
+  const el = $(`.card[data-task="${key}"]`);
+  if (!el) return;
+  const t = C.tasks.find((x) => x.key === key), s = st(key), b = branch(), sent = SENT[key];
+  const collapsed = sent && !OPENED.has(key) && !s.busy;
+  el.className = "card" + (sent ? " sent" : "") + (collapsed ? " collapsed" : "");
+  el.dataset.status = s.status;
+  let html = `<p class="stamp">${esc(branchTitle(b))}</p>
+    <div class="top"><span class="time">${t.time}</span><span class="task">${esc(taskTitle(t, b))}</span></div>`;
+  if (sent) html += `<div class="sent-line"><span class="status-badge ${sent.status === "issue" ? "status-issue" : "status-done"}"><span class="status-icon">${sent.status === "issue" ? "!" : "✓"}</span>Ուղարկված է · ${hhmm(sent.created_at)}</span>${collapsed ? `<button type="button" data-reopen>Ուղարկել նորից</button>` : ""}</div>`;
+  html += `<div class="body">
+    <label style="margin-top:16px">Կարգավիճակ<select data-k="status">
+      <option value="done"${s.status === "done" ? " selected" : ""}>Կատարված է</option>
+      <option value="issue"${s.status === "issue" ? " selected" : ""}>Կատարված չէ</option></select></label>`;
+  if (t.groups) {
+    const items = qItems(t);
+    const filled = items.filter((k) => s.q[k] !== undefined && s.q[k] !== "").length;
+    html += `<p class="stamp">Քանակը՝ հատերով։ Եթե չկա՝ նշիր 0։</p><div class="quantity-list">`;
+    for (const g of t.groups) {
+      html += `<h3>${esc(g.title)}</h3>`;
+      g.items.forEach((item) => {
+        const k = qKey(g.title, item), id = `q-${key}-${items.indexOf(k)}`;
+        html += `<div class="quantity-row"><label for="${id}">${esc(item)}</label><input id="${id}" data-q="${esc(k)}" type="number" inputmode="numeric" pattern="[0-9]*" enterkeyhint="next" min="0" max="10000" step="1" placeholder="0" value="${esc(s.q[k] ?? "")}"></div>`;
+      });
+    }
+    html += `</div>`;
+    if (items.length > 4) html += `<div class="q-sticky"><p class="stamp" data-progress>Լրացված է ${filled} / ${items.length}</p><button type="button" data-zero>Մնացածը՝ 0</button></div>`;
+    else html += `<p class="stamp" data-progress>Լրացված է ${filled} / ${items.length}</p>`;
+  }
+  if (t.photo !== "none") {
+    const full = s.photos.length >= C.maxPhotos;
+    html += `<label style="margin-top:16px">${esc(t.photoLabel)}</label>
+      <div class="photo-grid">${s.photos.map((p, i) => `<div class="thumb"><img src="${p.url}" alt=""><button type="button" data-del="${i}" aria-label="Հեռացնել">×</button></div>`).join("")}</div>
+      <div class="photo-add"${full ? " hidden" : ""}>
+        <button type="button" data-pick="cam">📷 Նկարել</button>
+        <button type="button" data-pick="gal">🖼 Ընտրել</button>
+        <input type="file" accept="image/*" capture="environment" data-file="cam">
+        <input type="file" accept="image/*" multiple data-file="gal">
+      </div>
+      <p class="stamp">${s.photos.length} / ${C.maxPhotos} · ${esc(t.photoHint || "")}</p>`;
+  }
+  html += `<label style="margin-top:14px">Նշում / խնդրի դեպքում՝ պարտադիր նկարագրություն<textarea data-k="note" maxlength="2000" placeholder="Ինչ է արվել կամ ինչն է խանգարում">${esc(s.note)}</textarea></label>
+    <div class="form-actions"><button type="button" class="primary send"${s.busy ? " disabled" : ""}>${s.busy ? esc(s.busyText || "Ուղարկվում է…") : (s.msgType === "is-error" && s.failed ? "Կրկին փորձել" : "Ուղարկել հիմա")}</button></div>
+    </div>
+    <p role="status" class="result ${s.msgType}">${esc(s.msg)}</p>`;
+  el.innerHTML = html;
+}
+
+function updateProgress(card, key) {
+  const t = C.tasks.find((x) => x.key === key), s = st(key), items = qItems(t);
+  const filled = items.filter((k) => s.q[k] !== undefined && s.q[k] !== "").length;
+  const p = $("[data-progress]", card);
+  if (p) p.textContent = `Լրացված է ${filled} / ${items.length}`;
+}
+
+/* ---------- send ---------- */
+function validate(t, s) {
+  const b = branch();
+  if (!$("#name").value.trim()) { $("#name").focus(); return "Լրացրու անունը և ազգանունը։"; }
+  if (!b) return "Ընտրիր մասնաճյուղը։";
+  if (!$("#staffCode").value.trim()) { $("#staffCode").focus(); return "Մուտքագրիր աշխատակազմի կոդը։"; }
+  if (s.status === "issue" && !s.note.trim()) return "«Կատարված չէ»-ի դեպքում նկարագրիր խնդիրը։";
+  if (t.groups && s.status === "done") {
+    const miss = qItems(t).find((k) => s.q[k] === undefined || s.q[k] === "");
+    if (miss) return `Լրացրու բոլոր քանակները (${miss.split("/")[1]})։`;
+  }
+  for (const [k, v] of Object.entries(s.q)) {
+    if (v === "") continue;
+    const n = Number(v);
+    if (!Number.isInteger(n) || n < 0 || n > 10000) return `Սխալ քանակ՝ ${k.split("/")[1]} (0–10000)։`;
+  }
+  if (s.status === "done" && t.photo === "required" && !s.photos.length) return "Կցիր լուսանկարը։";
+  return "";
+}
+function send(key) {
+  const t = C.tasks.find((x) => x.key === key), s = st(key);
+  const err = validate(t, s);
+  if (err) { s.msg = err; s.msgType = "is-error"; s.failed = false; renderCard(key); return; }
+  const fd = new FormData();
+  fd.append("code", $("#staffCode").value.trim());
+  fd.append("branch", branch());
+  fd.append("task", key);
+  fd.append("name", $("#name").value.trim());
+  fd.append("status", s.status);
+  fd.append("note", s.note.trim());
+  if (t.groups) {
+    const q = {};
+    for (const [k, v] of Object.entries(s.q)) if (v !== "") q[k] = Number(v);
+    fd.append("quantities", JSON.stringify(q));
+  }
+  s.photos.forEach((p, i) => fd.append("photos", p.blob, `photo-${i + 1}.jpg`));
+  s.busy = true; s.busyText = "Ուղարկվում է…"; s.msg = ""; s.msgType = "";
+  renderCard(key);
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", API);
+  xhr.timeout = 120000;
+  xhr.upload.onprogress = (e) => {
+    if (!e.lengthComputable) return;
+    s.busyText = `Ուղարկվում է… ${Math.round((e.loaded / e.total) * 100)}%`;
+    const btn = $(`.card[data-task="${key}"] .send`); if (btn) btn.textContent = s.busyText;
+  };
+  const fail = (msg) => {
+    s.busy = false; s.failed = true; s.msg = msg; s.msgType = "is-error";
+    renderCard(key);
+  };
+  xhr.onload = () => {
+    let d = {}; try { d = JSON.parse(xhr.responseText); } catch {}
+    if (xhr.status === 200 && d.ok) {
+      s.photos.forEach((p) => URL.revokeObjectURL(p.url));
+      S[key] = { status: "done", note: "", q: {}, photos: [], busy: false, msg: `Պահված է · ${hhmm(d.created_at)}${d.photos ? ` · ${d.photos} լուսանկար` : ""}`, msgType: "is-ok" };
+      SENT[key] = { status: s.status, created_at: d.created_at };
+      OPENED.delete(key);
+      saveDraft();
+      renderTasks();
+      if (d.work_day && d.work_day !== DAY) { DAY = d.work_day; $("#day").value = fmtDay(DAY); }
+      loadStatus();
+    } else {
+      if (xhr.status === 401) $("#staffCode").setAttribute("aria-invalid", "true");
+      fail(d.error || "Չհաջողվեց ուղարկել։ Ստուգիր ինտերնետը և կրկին փորձիր։");
+    }
+  };
+  xhr.onerror = xhr.ontimeout = () => fail("Կապ չկա։ Լրացվածը և լուսանկարները պահված են էջում․ սեղմիր «Կրկին փորձել»։");
+  xhr.send(fd);
+}
+
+/* ---------- status ---------- */
+async function loadStatus() {
+  const b = branch();
+  if (!b) { SENT = {}; return; }
+  try {
+    const d = await post({ action: "status", branch: b });
+    if (b !== branch()) return;
+    if (d.day && d.day !== DAY) { DAY = d.day; $("#day").value = fmtDay(DAY); }
+    SENT = {};
+    for (const it of d.items) SENT[it.task_key] = it;
+    if (!$$(".card .send[disabled]").length && !document.activeElement?.closest?.(".card")) renderTasks();
+    else renderTabs();
+  } catch {}
+}
+
+/* ---------- staff events ---------- */
+function bindStaff() {
+  $("#tasks").addEventListener("input", (e) => {
+    const card = e.target.closest(".card"); if (!card) return;
+    const key = card.dataset.task, s = st(key);
+    if (e.target.dataset.q !== undefined) {
+      const v = e.target.value.replace(/[^\d]/g, "");
+      s.q[e.target.dataset.q] = v;
+      e.target.removeAttribute("aria-invalid");
+      updateProgress(card, key);
+    } else if (e.target.dataset.k === "note") s.note = e.target.value;
+    saveDraft();
+  });
+  $("#tasks").addEventListener("change", (e) => {
+    const card = e.target.closest(".card"); if (!card) return;
+    const key = card.dataset.task, s = st(key);
+    if (e.target.dataset.k === "status") { s.status = e.target.value; card.dataset.status = s.status; saveDraft(); }
+    if (e.target.dataset.file) { addPhotos(key, e.target.files); e.target.value = ""; }
+  });
+  $("#tasks").addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" || e.target.dataset.q === undefined) return;
+    e.preventDefault();
+    const all = $$("[data-q]", e.target.closest(".card"));
+    const next = all[all.indexOf(e.target) + 1];
+    if (next) { next.focus(); next.select?.(); } else e.target.blur();
+  });
+  $("#tasks").addEventListener("click", (e) => {
+    const card = e.target.closest(".card"); if (!card) return;
+    const key = card.dataset.task, s = st(key);
+    const btn = e.target.closest("button"); if (!btn) return;
+    if (btn.classList.contains("send")) return send(key);
+    if (btn.dataset.reopen !== undefined) { OPENED.add(key); s.msg = ""; renderCard(key); return; }
+    if (btn.dataset.pick) { $(`[data-file="${btn.dataset.pick}"]`, card).click(); return; }
+    if (btn.dataset.del !== undefined) {
+      const [p] = s.photos.splice(Number(btn.dataset.del), 1); if (p) URL.revokeObjectURL(p.url);
+      s.msg = ""; renderCard(key); return;
+    }
+    if (btn.dataset.zero !== undefined) {
+      const t = C.tasks.find((x) => x.key === key);
+      qItems(t).forEach((k) => { if (s.q[k] === undefined || s.q[k] === "") s.q[k] = "0"; });
+      saveDraft(); renderCard(key); return;
+    }
+  });
+  $("#tabs").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-tab]"); if (!b) return;
+    TAB = Number(b.dataset.tab); renderTasks();
+  });
+  $("#branch").addEventListener("change", () => {
+    LS.set("fein_branch", branch());
+    for (const k of Object.keys(S)) delete S[k];
+    OPENED.clear(); SENT = {};
+    if (branch()) loadDraft();
+    renderTasks(); loadStatus();
+  });
+  $("#name").addEventListener("input", () => LS.set("fein_name", $("#name").value));
+  $("#staffCode").addEventListener("input", () => $("#staffCode").removeAttribute("aria-invalid"));
+  $("#keepDrafts").addEventListener("change", () => {
+    LS.set("fein_keep", $("#keepDrafts").checked);
+    if ($("#keepDrafts").checked) saveDraft(); else clearDrafts();
+  });
+  $("#clearDrafts").addEventListener("click", () => {
+    clearDrafts();
+    for (const k of Object.keys(S)) delete S[k];
+    renderTasks();
+  });
+}
+
+/* ---------- owner ---------- */
+let OWNER_PW = LS.get("fein_owner_pw");
+let FEED = [];
+let PV = { list: [], i: 0 };
+
+function showView(v) {
+  $$("#mainNav button").forEach((b) => b.classList.toggle("active", b.dataset.view === v));
+  $("#app").hidden = v !== "work";
+  $("#feed").hidden = v !== "feed";
+  if (v === "feed") loadFeed();
+}
+function ownerMode(on) {
+  $("#mainNav").hidden = !on;
+  $("#loginCard").hidden = true;
+  $("#ownerLink").parentElement.hidden = on;
+  if (on) showView("feed"); else { $("#feed").hidden = true; $("#app").hidden = false; }
+}
+async function login() {
+  const pw = $("#ownerPw").value;
+  $("#loginMsg").textContent = "";
+  $("#loginBtn").disabled = true;
+  try {
+    await post({ action: "owner", password: pw });
+    OWNER_PW = pw; LS.set("fein_owner_pw", pw);
+    $("#ownerPw").value = "";
+    ownerMode(true);
+  } catch (e) { $("#loginMsg").textContent = e.message; }
+  $("#loginBtn").disabled = false;
+}
+async function loadFeed() {
+  $("#sync").textContent = "Բեռնվում է…";
+  try {
+    const d = await post({ action: "owner", password: OWNER_PW, day: $("#filterDay").value || DAY, branch: $("#filterBranch").value });
+    if (!$("#filterDay").value) $("#filterDay").value = d.day;
+    $("#filterDay").max = d.today;
+    FEED = d.items;
+    renderFeed();
+    $("#sync").textContent = `Թարմացված է ${hhmm(new Date().toISOString())}`;
+  } catch (e) {
+    if (e.status === 401) { LS.del("fein_owner_pw"); OWNER_PW = null; ownerMode(false); $("#loginCard").hidden = false; $("#loginMsg").textContent = e.message; return; }
+    $("#sync").textContent = e.message || "Չհաջողվեց բեռնել։";
+  }
+}
+function renderFeed() {
+  const fb = $("#filterBranch").value;
+  const branches = fb === "all" ? C.branches.map((b) => b.key) : [fb];
+  const latest = {};
+  for (const r of FEED) { const k = r.branch + "|" + r.task_key; if (!latest[k]) latest[k] = r.id; } // FEED is newest-first
+  let done = 0, issue = 0; const missing = [];
+  for (const b of branches) for (const t of C.tasks) {
+    const r = FEED.find((x) => x.branch === b && x.task_key === t.key);
+    if (!r) missing.push({ b, t }); else if (r.status === "issue") issue++; else done++;
+  }
+  $("#summary").innerHTML = `<div class="summary-grid">
+    <div class="summary-tile status-done"><span class="tile-icon">✓</span><span>Կատարված է</span><strong>${done}</strong></div>
+    <div class="summary-tile status-issue"><span class="tile-icon">!</span><span>Կատարված չէ</span><strong>${issue}</strong></div>
+    <div class="summary-tile status-missing"><span class="tile-icon">○</span><span>Չի ուղարկվել</span><strong>${missing.length}</strong></div></div>`;
+  $("#missing").innerHTML = missing.length && !$("#onlyIssues").checked ? `<h2>Չուղարկված գործեր</h2><ul class="missing-list">${missing.map(({ b, t }) =>
+    `<li><strong>${t.time}</strong><div class="missing-copy"><span>${esc(taskTitle(t, b))}</span><span class="status-badge status-missing">${esc(branchTitle(b))} · ${esc(C.slots[t.slot])}</span></div></li>`).join("")}</ul>` : "";
+  const only = $("#onlyIssues").checked;
+  const rows = FEED.filter((r) => !only || (r.status === "issue" && latest[r.branch + "|" + r.task_key] === r.id));
+  PV.all = [];
+  $("#feedItems").innerHTML = rows.length ? rows.map((r) => {
+    const t = C.tasks.find((x) => x.key === r.task_key) || { title: r.task_key, time: "" };
+    const hist = latest[r.branch + "|" + r.task_key] !== r.id;
+    let q = "";
+    if (r.quantities && t.groups) {
+      const keys = qItems(t), nz = keys.filter((k) => Number(r.quantities[k]) > 0);
+      q = `<details${nz.length && nz.length <= 6 ? " open" : ""}><summary>Քանակներ · ${nz.length ? `${nz.length} դիրք > 0` : "բոլորը 0"}</summary><div class="qgrid">${
+        keys.filter((k) => r.quantities[k] !== undefined).map((k) => `<span class="${Number(r.quantities[k]) ? "" : "zero"}">${esc(k.split("/")[1])} <small>· ${esc(k.split("/")[0])}</small></span><span class="${Number(r.quantities[k]) ? "" : "zero"}">${r.quantities[k]}</span>`).join("")}</div></details>`;
+    }
+    const start = PV.all.length; PV.all.push(...r.photos);
+    return `<article class="feed-row ${hist ? "is-history" : r.status === "issue" ? "status-issue" : "status-done"}">
+      <div class="top"><strong>${esc(taskTitle(t, r.branch))}</strong><span class="chip">${esc(branchTitle(r.branch))}</span><span class="chip">${t.time ? t.time + " · " : ""}ուղարկվել է ${hhmm(r.created_at)}</span></div>
+      <div class="feed-status"><span class="status-badge ${r.status === "issue" ? "status-issue" : "status-done"}"><span class="status-icon">${r.status === "issue" ? "!" : "✓"}</span>${r.status === "issue" ? "Կատարված չէ" : "Կատարված է"}</span><span>${esc(r.name)}</span>${hist ? `<span class="history-label">Նախորդ ուղարկում</span>` : ""}</div>
+      ${r.note ? `<p class="note">${esc(r.note)}</p>` : ""}${q}
+      ${r.photos.length ? `<div class="feed-photos">${r.photos.map((u, i) => `<img src="${esc(u)}" loading="lazy" alt="" data-pv="${start + i}" data-from="${start}" data-n="${r.photos.length}">`).join("")}</div>` : ""}
+    </article>`;
+  }).join("") : `<p class="empty-state">${only ? "Խնդիրներ չկան։" : "Այս օրվա համար թարմացումներ դեռ չկան։"}</p>`;
+}
+function openPv(from, n, i) {
+  PV.list = PV.all.slice(from, from + n); PV.i = i;
+  showPv(); $("#photoDialog").showModal();
+}
+function showPv() {
+  $("#pvImg").src = PV.list[PV.i];
+  $("#pvCount").textContent = `${PV.i + 1} / ${PV.list.length}`;
+  $("#pvPrev").hidden = $("#pvNext").hidden = PV.list.length < 2;
+}
+const stepPv = (d) => { PV.i = (PV.i + d + PV.list.length) % PV.list.length; showPv(); };
+function bindOwner() {
+  $("#ownerLink").addEventListener("click", () => {
+    if (OWNER_PW) return ownerMode(true);
+    $("#loginCard").hidden = !$("#loginCard").hidden;
+    if (!$("#loginCard").hidden) $("#ownerPw").focus();
+  });
+  $("#loginBtn").addEventListener("click", login);
+  $("#ownerPw").addEventListener("keydown", (e) => { if (e.key === "Enter") login(); });
+  $("#mainNav").addEventListener("click", (e) => { const b = e.target.closest("[data-view]"); if (b) showView(b.dataset.view); });
+  $("#refresh").addEventListener("click", loadFeed);
+  $("#filterDay").addEventListener("change", loadFeed);
+  $("#filterBranch").addEventListener("change", loadFeed);
+  $("#onlyIssues").addEventListener("change", renderFeed);
+  $("#logout").addEventListener("click", () => { LS.del("fein_owner_pw"); OWNER_PW = null; ownerMode(false); });
+  $("#feedItems").addEventListener("click", (e) => {
+    const img = e.target.closest("[data-pv]"); if (!img) return;
+    openPv(Number(img.dataset.from), Number(img.dataset.n), Number(img.dataset.pv) - Number(img.dataset.from));
+  });
+  $("#pvClose").addEventListener("click", () => $("#photoDialog").close());
+  $("#pvPrev").addEventListener("click", () => stepPv(-1));
+  $("#pvNext").addEventListener("click", () => stepPv(1));
+  $("#photoDialog").addEventListener("click", (e) => { if (e.target.id === "pv") $("#photoDialog").close(); });
+  $("#photoDialog").addEventListener("keydown", (e) => { if (e.key === "ArrowLeft") stepPv(-1); if (e.key === "ArrowRight") stepPv(1); });
+  let x0 = null;
+  $("#pv").addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  $("#pv").addEventListener("touchend", (e) => {
+    if (x0 === null || PV.list.length < 2) return;
+    const dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 50) stepPv(dx < 0 ? 1 : -1);
+  });
+}
+
+/* ---------- init ---------- */
+function applyConfig() {
+  const sel = $("#branch"), keep = sel.value || LS.get("fein_branch", "");
+  sel.innerHTML = `<option value="">Ընտրիր մասնաճյուղը</option>` + C.branches.map((b) => `<option value="${b.key}">${esc(b.title)}</option>`).join("");
+  sel.value = C.branches.some((b) => b.key === keep) ? keep : "";
+  $("#filterBranch").innerHTML = `<option value="all">Բոլոր մասնաճյուղերը</option>` + C.branches.map((b) => `<option value="${b.key}">${esc(b.title)}</option>`).join("");
+}
+async function init() {
+  const h = yerevanHour();
+  TAB = h >= 4 && h < 13 ? 0 : h >= 13 && h < 20 ? 1 : 2;
+  $("#name").value = LS.get("fein_name", "");
+  $("#keepDrafts").checked = !!LS.get("fein_keep", false);
+  bindStaff(); bindOwner();
+  if (C) { applyConfig(); DAY = new Date().toISOString().slice(0, 10); $("#day").value = fmtDay(DAY); if (branch() && $("#keepDrafts").checked) loadDraft(); renderTasks(); }
+  try {
+    const d = await post({ action: "config" });
+    const first = !C;
+    C = d; DAY = d.day; LS.set("fein_config", d);
+    $("#day").value = fmtDay(DAY);
+    applyConfig();
+    if (first && branch() && $("#keepDrafts").checked) loadDraft();
+    renderTasks();
+    loadStatus();
+  } catch {
+    if (!C) $("#fatal").textContent = "Չհաջողվեց բեռնել ձևը։ Ստուգիր ինտերնետը և թարմացրու էջը։";
+  }
+  if (OWNER_PW) ownerMode(true);
+  setInterval(() => { if (!document.hidden && !$("#app").hidden) loadStatus(); }, 60000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && C) loadStatus(); });
+}
+init();
+})();
+</script>
+</body>
+</html>
