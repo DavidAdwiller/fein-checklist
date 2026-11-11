@@ -273,7 +273,7 @@ const fmtDay = (d) => d ? d.split("-").reverse().join(".") : "";
 const hhmm = (iso) => new Date(iso).toLocaleTimeString("hy-AM", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Asia/Yerevan" });
 const yerevanHour = () => Number(new Date().toLocaleString("en-GB", { hour: "2-digit", hour12: false, timeZone: "Asia/Yerevan" }));
 const qKey = (g, i) => `${g}/${i}`;
-const GRACE_MIN = 30; // опоздание — позже чем через 30 минут после времени дела
+const GRACE_MIN = 0; // опоздание — любая отправка позже времени дела
 const deadlineMs = (day, time) => { const [h, m] = time.split(":").map(Number); return Date.parse(day + "T00:00:00Z") + (((h * 60 + m - 240) + 1440) % 1440) * 60000; };
 const lateMin = (day, time, atMs) => Math.round((atMs - deadlineMs(day, time)) / 60000);
 const isLate = (day, time, atMs) => lateMin(day, time, atMs) > GRACE_MIN;
