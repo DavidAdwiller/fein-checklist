@@ -130,6 +130,8 @@ input[type=date]::-webkit-date-and-time-value{text-align:left}
 .qgrid{display:grid;grid-template-columns:1fr auto;gap:2px 16px;margin-top:6px}
 .qgrid span:nth-child(even){font-variant-numeric:tabular-nums;font-weight:600;text-align:right}
 .qgrid .zero{opacity:.5}
+.qh{font-size:13px;font-weight:600;color:#60665f;margin:12px 0 2px}
+.qh span{font-weight:400}
 .feed-photos{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .feed-photos img{width:120px;height:120px;object-fit:cover;border-radius:12px;cursor:zoom-in;background:#eee}
 #branchTabs{margin-top:0}
@@ -617,9 +619,15 @@ const latestOf = (rows) => rows[0]; // FEED newest-first
 function feedRowHtml(r, t, hist) {
   let q = "";
   if (r.quantities && t.groups) {
-    const keys = qItems(t), nz = keys.filter((k) => Number(r.quantities[k]) > 0);
-    q = `<details${nz.length && nz.length <= 6 ? " open" : ""}><summary>Քանակներ · ${nz.length ? `${nz.length} դիրք > 0` : "բոլորը 0"}</summary><div class="qgrid">${
-      keys.filter((k) => r.quantities[k] !== undefined).map((k) => `<span class="${Number(r.quantities[k]) ? "" : "zero"}">${esc(k.split("/")[1])} <small>· ${esc(k.split("/")[0])}</small></span><span class="${Number(r.quantities[k]) ? "" : "zero"}">${r.quantities[k]}</span>`).join("")}</div></details>`;
+    let nz = 0;
+    const parts = t.groups.map((g) => {
+      const items = g.items.map((i) => [i, Number(r.quantities[qKey(g.title, i)])]).filter(([, n]) => n > 0).sort((x, y) => y[1] - x[1]);
+      nz += items.length;
+      if (!items.length) return "";
+      const sum = items.reduce((acc, [, n]) => acc + n, 0);
+      return `<h4 class="qh">${esc(g.title)} <span>· ${sum} հատ</span></h4><div class="qgrid">${items.map(([i, n]) => `<span>${esc(i)}</span><span>${n}</span>`).join("")}</div>`;
+    }).join("");
+    q = `<details${nz ? " open" : ""}><summary>Քանակներ · ${nz ? `${nz} դիրք` : "բոլորը 0"}</summary>${parts || `<p class="stamp">Բոլոր քանակները 0 են։</p>`}</details>`;
   }
   const start = PV.all.length; PV.all.push(...r.photos);
   const lm = t.time ? lateMin(r.work_day, t.time, Date.parse(r.created_at)) : 0, late = lm > GRACE_MIN;
